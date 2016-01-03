@@ -1,0 +1,1 @@
+Implementation of Term-At-A-Time(TAAT) comparison and Document-At-A-Time(DAAT) comparison.

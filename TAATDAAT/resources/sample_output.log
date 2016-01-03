@@ -1,0 +1,61 @@
+FUNCTION: getTopK 10
+Result: term1, term2, term3, term4, term5, term6, term7, term8, term9, term10
+FUNCTION: getPostings hard
+Ordered by doc IDs: 100, 200, 300… 
+Ordered by TF: 300, 100, 200… 
+FUNCTION: getPostings hand
+Ordered by doc IDs: 100, 200, 300… 
+Ordered by TF: 300, 100, 200… 
+FUNCTION: termAtATimeQueryAnd hard, hand
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+nn comparisons are made with optimization (optional bonus part)
+Result: 100, 200, 300
+FUNCTION: termAtATimeQueryOr hard, hand
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+nn comparisons are made with optimization (optional bonus part)
+Result: 100, 200, 300
+FUNCTION: docAtATimeQueryAnd hard, hand
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+Result: 100, 200, 300
+FUNCTION: docAtATimeQueryOr hard, hand
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+Result: 100, 200, 300
+FUNCTION: getPostings move
+Ordered by doc IDs: 100, 200, 300… 
+Ordered by TF: 300, 100, 200… 
+FUNCTION: getPostings lower
+Ordered by doc IDs: 100, 200, 300… 
+Ordered by TF: 300, 100, 200… 
+FUNCTION: getPostings expect
+Ordered by doc IDs: 100, 200, 300… 
+Ordered by TF: 300, 100, 200… 
+FUNCTION: termAtATimeQueryAnd move, lower, expect
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+nn comparisons are made with optimization (optional bonus part)
+Result: 100, 200, 300
+FUNCTION: termAtATimeQueryOr move, lower, expect
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+nn comparisons are made with optimization (optional bonus part)
+Result: 100, 200, 300
+FUNCTION: docAtATimeQueryAnd move, lower, expect
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+Result: 100, 200, 300
+FUNCTION: docAtATimeQueryOr move, lower, expect
+xx documents are found 
+yy comparisions are made
+zz seconds are used
+Result: 100, 200, 300
