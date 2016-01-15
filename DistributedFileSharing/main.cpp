@@ -14,13 +14,27 @@
 #include <sys/wait.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ifaddrs.h>
+#include <arpa/inet.h>
 
 using namespace std;
 
 #define STDIN 0
 
 void creator(void);
-int bind_port(char*);
+void _display(void);
+void _register(char*, char*);
+void _connect(char*, char*);
+void _list(void);
+void _terminate(char*);
+void _quit();
+void _get(char*, char*);
+void _put(char*, char*);
+void _sync();
+
+char hostname[200];
+char ipaddress[20];
+char port[6];
 
 int sockfd;
 bool server;
@@ -28,37 +42,34 @@ fd_set master;    // master file descriptor list
 fd_set read_fds;  // temp file descriptor list for select()
 int fdmax;        // maximum file descriptor number
 
-int main(int argc, char **argv)
+void populate_host_details()
 {
-	int res = bind_port(argv[2]);
-	if(res)
-		exit(1);
+	gethostname(hostname, sizeof hostname);
 	
-	// Setting if the process is a server
-	server = argv[1][0] == 's';
-	
-	char command[200];
-	while(true)
+	struct ifaddrs * ifAddrStruct;
+	struct ifaddrs * ifa;
+	void * tmpAddrPtr;
+
+	getifaddrs(&ifAddrStruct);
+
+	for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
 	{
-		cout << "$";
-		cin >> command;
-		
-		int com_id = get_command_id(command);
-		switch(com_id)
+		if (!ifa->ifa_addr)
 		{
-			case _HELP:
-				display_commands();
-				break;
-			case _CREATOR:
-				creator();
-				break;
+			continue;
+		}
+
+		// check it is IP4 and it is not local host
+		if (ifa->ifa_addr->sa_family == AF_INET && strcasecmp("lo", ifa->ifa_name))
+		{ 	
+			tmpAddrPtr = &((struct sockaddr_in *) ifa->ifa_addr)->sin_addr;
+			inet_ntop(AF_INET, tmpAddrPtr, ipaddress, INET_ADDRSTRLEN);
+			break;
 		}
 	}
-}
-
-void creator()
-{
-	cout << "Prasanth Mathialagan\npmathial\npmathial@buffalo.edu\n";
+	
+	if (ifAddrStruct != NULL)
+		freeifaddrs(ifAddrStruct);
 }
 
 void sigchld_handler(int s)
@@ -69,7 +80,7 @@ void sigchld_handler(int s)
 	errno = saved_errno;
 }
 
-int bind_port(char* port)
+int bind_port()
 {
 	struct addrinfo hints, *servinfo, *p;
 	struct sigaction sa;
@@ -142,4 +153,123 @@ int bind_port(char* port)
 	return 0;
 }
 
+int main(int argc, char **argv)
+{
+	strcpy(port, argv[2]);
+	populate_host_details();
+	int res = bind_port();
+	if(res)
+		exit(1);
+	
+	// Setting if the process is a server
+	server = argv[1][0] == 's';
+	
+	char command[30];
+	char other_host[200];
+	char file_name[200];
+	char port[6];
+	while(true)
+	{
+		cout << "$";
+		cin >> command;
+		int com_id = get_command_id(command);
+		switch(com_id)
+		{
+			case _HELP:
+				display_commands();
+				break;
+			case _CREATOR:
+				creator();
+				break;
+			case _DISPLAY:
+				_display();
+				break;
+			case _REGISTER:
+				cin >> other_host >> port;
+				_register(other_host, port);
+				break;
+			case _CONNECT:
+				cin >> other_host >> port;
+				_connect(other_host, port);
+				break;
+			case _LIST:
+				_list();
+				break;
+			case _TERMINATE:
+				cin >> other_host;
+				_terminate(other_host);
+				break;
+			case _QUIT:
+				_quit();
+				break;
+			case _GET:
+				cin >> other_host >> file_name;
+				_get(other_host, file_name);
+				break;
+			case _PUT:
+				cin >> other_host >> file_name;
+				_put(other_host, file_name);
+				break;
+			case _SYNC:
+				_sync();
+				break;
+			default:
+				cout << "Invalid command" << endl ;
+				break;
+		}
+	}
+}
 
+void creator()
+{
+	cout << "Prasanth Mathialagan\npmathial\npmathial@buffalo.edu\n";
+}
+
+void _display()
+{
+	cout << "IP address : " << ipaddress << "\nPort : " << port << endl; 
+}
+
+void _register(char* server, char* port)
+{
+	cout << server << endl;
+	cout << port << endl;
+	// TODO :
+}
+
+void _connect(char *host, char* port)
+{
+	cout << host << endl;
+	cout << port << endl;
+	// TODO :
+}
+
+void _list()
+{
+	// TODO:
+}
+
+void _terminate(char* connection)
+{
+	// TODO:
+}
+
+void _quit()
+{
+	// TODO:
+}
+
+void _get(char* host, char* file_name)
+{
+	// TODO:
+}
+
+void _put(char* host, char* file_name)
+{
+	// TODO:
+}
+
+void _sync()
+{
+	// TODO:
+}
